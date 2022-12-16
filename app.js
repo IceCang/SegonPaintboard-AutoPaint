@@ -29,9 +29,6 @@ async function main() {
   while (true) {
     if (Date.now() < config.startTimestamp) continue;
     if (Date.now() > config.startTimestamp) break;
-    if (Date.now() - lastGetBoardTime >= config.fetchTime) {
-      await getBoard();
-    }
     for (let user of config.users) {
       if (Date.now() - user.lastPaintTime < config.paintTime) {
         continue;
@@ -60,36 +57,6 @@ function getConfig() {
   }
 }
 
-function getPic() {
-  try {
-    for (let p of config.picFile) {
-      pic.push({
-        x: p.x,
-        y: p.y,
-        map: JSON.parse(fs.readFileSync(path.join(__dirname, 'pictures', p.name), 'utf-8'))
-      });
-    }
-  } catch (err) {
-    console.error('Get Pictures Failed.');
-    process.exit(1);
-  }
-}
-
-async function getBoard() {
-  lastGetBoardTime = Date.now();
-  try {
-    let str = await fetch(luoguPaintBoardUrl + '/board');
-    board = (await str.text()).split('\n');
-    if (!board[board.length - 1]) {
-      board.pop();
-    }
-    console.log(new Date().toLocaleString(), 'Get PaintBoard Succeeded.');
-    getReqPaintPos();
-  } catch (err) {
-    console.warn(new Date().toLocaleString(), 'Get PaintBoard Failed:', err);
-  }
-}
-
 function getReqPaintPos() {
   try {
     reqPaintPos = [];
@@ -110,6 +77,21 @@ function getReqPaintPos() {
     console.log(new Date().toLocaleString(), `Load reqPaintPos Succeeded: Size = ${reqPaintPos.length}.`);
   } catch (err) {
     console.warn(new Date().toLocaleString(), 'Load reqPaintPos Failed:', err);
+  }
+}
+
+function getPic() {
+  try {
+    for (let p of config.picFile) {
+      pic.push({
+        x: p.x,
+        y: p.y,
+        map: JSON.parse(fs.readFileSync(path.join(__dirname, 'pictures', p.name), 'utf-8'))
+      });
+    }
+  } catch (err) {
+    console.error('Get Pictures Failed.');
+    process.exit(1);
   }
 }
 
@@ -139,20 +121,20 @@ async function paintBoard(user, data) {
 async function countDelta() {
   let correct = 0;
   let wrong = 0;
-  let boardt = [];
   try {
     let str = await fetch(luoguPaintBoardUrl + '/board');
-    boardt = (await str.text()).split('\n');
-    if (!boardt[boardt.length - 1]) {
-      boardt.pop();
+    board = (await str.text()).split('\n');
+    if (!board[board.length - 1]) {
+      board.pop();
     }
     console.log(new Date().toLocaleString(), 'Get PaintBoard While Counting Delta Succeeded.');
+    getReqPaintPos();
   } catch (err) {
     console.warn(new Date().toLocaleString(), 'Get PaintBoard While Counting Delta Failed:', err);
   }
   for (let p of pic) {
     for (let pix of p.map) {
-      if (parseInt(boardt[pix.x + p.x][pix.y + p.y], 36) == pix.color) {
+      if (parseInt(board[pix.x + p.x][pix.y + p.y], 36) == pix.color) {
         correct++;
       }
       else wrong++;
