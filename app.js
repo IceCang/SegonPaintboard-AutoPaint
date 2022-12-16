@@ -23,6 +23,8 @@ async function main() {
   getPic();
   await getBoard();
   
+  if (Date.now() < config.startTimestamp) console.log("等待活动开始...");
+
   setInterval(countDelta, config.fetchTime);
   while (true) {
     if (Date.now() < config.startTimestamp) continue;
