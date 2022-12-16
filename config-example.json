@@ -11,8 +11,10 @@
       "y": 0
     }
   ],
-  "fetchTime": 10000,
-  "paintTime": 31000,
+  "fetchTime": 2550,
+  "paintTime": 5100,
+  "startTimestamp": 1671206400,
+  "endTimestamp": 1671379200,
   "random": false,
   "users": [
     {

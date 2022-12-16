@@ -22,8 +22,11 @@ async function main() {
   getConfig();
   getPic();
   await getBoard();
-
+  
+  setInterval(countDelta, config.fetchTime);
   while (true) {
+    if (Date.now() < config.startTimestamp) continue;
+    if (Date.now() > config.startTimestamp) break;
     if (Date.now() - lastGetBoardTime >= config.fetchTime) {
       await getBoard();
     }
@@ -162,4 +165,4 @@ async function countDelta() {
   console.log(new Date.toLocaleString(), `Delta: ${delta}, Speed: ${speed}/${config.fetchTime/1000}s, ETime: `+eTime);
 }
 
-setInterval(countDelta, config.fetchTime);
+console.log("活动已结束！")
