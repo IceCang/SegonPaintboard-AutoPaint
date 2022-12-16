@@ -26,8 +26,8 @@ async function main() {
 
   setInterval(countDelta, config.fetchTime);
   while (true) {
-    if (Date.now() < config.startTimestamp) continue;
-    if (Date.now() > config.endTimestamp){console.log("活动已结束！");break;}
+    if (Date.now() < config.startTimestamp*1000) continue;
+    if (Date.now() > config.endTimestamp*1000){console.log("活动已结束！");break;}
     for (let user of config.users) {
       if (Date.now() - user.lastPaintTime < config.paintTime) {
         continue;
