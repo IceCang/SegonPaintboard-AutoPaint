@@ -27,7 +27,7 @@ async function main() {
   setInterval(countDelta, config.fetchTime);
   while (true) {
     if (Date.now() < config.startTimestamp) continue;
-    if (Date.now() > config.endTimestamp) break;
+    if (Date.now() > config.endTimestamp){console.log("活动已结束！");break;}
     for (let user of config.users) {
       if (Date.now() - user.lastPaintTime < config.paintTime) {
         continue;
@@ -147,5 +147,3 @@ async function countDelta() {
   else eTime = `${eTime}s`;
   console.log(new Date.toLocaleString(), `Delta: ${delta}, Speed: ${speed}/${config.fetchTime/1000}s, ETime: `+eTime);
 }
-
-console.log("活动已结束！")
