@@ -1,21 +1,21 @@
 {
-  "name": "luogu-painter",
+  "name": "segon-painter",
   "version": "1.0.0",
-  "description": "The Painter of Luogu PaintBoard",
+  "description": "The Painter of Segon PaintBoard",
   "main": "app.js",
   "scripts": {
     "start": "node app.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Early0v0/Luogu-Painter.git"
+    "url": "git+https://github.com/IceCang/SegonPaintboard-AutoPaint.git"
   },
-  "author": "Early <lin_erli@outlook.com>",
+  "author": "liucang <jason_lzm@163.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Early0v0/Luogu-Painter/issues"
+    "url": "https://github.com/IceCang/SegonPaintboard-AutoPaint/issues"
   },
-  "homepage": "https://github.com/Early0v0/Luogu-Painter#readme",
+  "homepage": "https://github.com/IceCang/SegonPaintboard-AutoPaint#readme",
   "dependencies": {
     "node-fetch": "^2.6.0"
   }

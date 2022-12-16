@@ -7,7 +7,7 @@ const querystring = require('querystring');
 const process = require('process');
 const { count } = require('console');
 
-const luoguPaintBoardUrl = 'https://segonoj.site/paintboard';
+const segonPaintBoardUrl = 'https://segonoj.site/paintboard';
 
 let config;
 let pic = [];
@@ -115,15 +115,15 @@ function getReqPaintPos() {
 
 async function paintBoard(user, data) {
   try {
-    let res = await fetch(`${luoguPaintBoardUrl}/paint`, {
+    let res = await fetch(`${segonPaintBoardUrl}/paint`, {
       method: 'POST',
       headers: {
         'content-type': 'application/x-www-form-urlencoded',
-        'referer': luoguPaintBoardUrl
+        'referer': segonPaintBoardUrl
       },
       body: querystring.stringify({x: data.x, y: data.y, color: data.color, uid: user.uid, token: user.token,})
     });
-    if (res.status == 200) {
+    if (res.status == 200 && res.data.status == 200) {
       console.log(new Date().toLocaleString(), 'Paint PaintBoard Succeeded:', user.token, data);
       paints++;
     } else {
