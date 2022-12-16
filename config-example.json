@@ -1,0 +1,27 @@
+{
+  "picFile": [
+    {
+      "name": "pic1.json",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "name": "pic2.json",
+      "x": 100,
+      "y": 0
+    }
+  ],
+  "fetchTime": 10000,
+  "paintTime": 31000,
+  "random": false,
+  "users": [
+    {
+      "token": "qaq",
+      "uid": 998244353
+    },
+    {
+      "token": "qwq",
+      "uid": 998244354
+    }
+  ]
+}
