@@ -21,14 +21,13 @@ async function main() {
   console.log('PaintTool Being loaded...');
   getConfig();
   getPic();
-  await getBoard();
   
   if (Date.now() < config.startTimestamp) console.log("等待活动开始...");
 
   setInterval(countDelta, config.fetchTime);
   while (true) {
     if (Date.now() < config.startTimestamp) continue;
-    if (Date.now() > config.startTimestamp) break;
+    if (Date.now() > config.endTimestamp) break;
     for (let user of config.users) {
       if (Date.now() - user.lastPaintTime < config.paintTime) {
         continue;
@@ -122,7 +121,7 @@ async function countDelta() {
   let correct = 0;
   let wrong = 0;
   try {
-    let str = await fetch(luoguPaintBoardUrl + '/board');
+    let str = await fetch(segonPaintBoardUrl + '/board');
     board = (await str.text()).split('\n');
     if (!board[board.length - 1]) {
       board.pop();
