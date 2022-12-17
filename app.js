@@ -146,5 +146,5 @@ async function countDelta() {
   eTime = wrong / speed * config.fetchTime/1000;
   if(eTime < 0) eTime = "Never";
   else eTime = `${eTime}s`;
-  console.log(Date.toLocaleString(), `Delta: ${delta}, Speed: ${speed}/${config.fetchTime/1000}s, ETime: `+eTime);
+  console.log(Date().toLocaleString(), `Delta: ${delta}, Speed: ${speed}/${config.fetchTime/1000}s, ETime: `+eTime);
 }
