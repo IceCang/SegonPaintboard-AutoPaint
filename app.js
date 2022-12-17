@@ -139,7 +139,7 @@ async function countDelta() {
       else wrong++;
     }
   }
-  delta = -correct + lcorrect - paints;
+  delta = correct - lcorrect  - paints;
   paints=0;
   speed = correct - lcorrect;
   lcorrect = correct;
