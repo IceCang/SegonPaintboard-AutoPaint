@@ -1,5 +1,4 @@
-'use strict';
-
+'use strict'
 const path = require('path');
 const fs = require('fs');
 const fetch = require('node-fetch');
@@ -11,7 +10,7 @@ const segonPaintBoardUrl = 'https://segonoj.site/paintboard';
 
 let config;
 let pic = [];
-let board = [], lastGetBoardTime, reqPaintPos = [];
+let board = [], lastGetBoardTime = 0, reqPaintPos = [];
 let paints = 0;
 let delta, lcorrect, speed, eTime;
 
@@ -22,12 +21,12 @@ async function main() {
   getConfig();
   getPic();
   
-  if (Date.now() < config.startTimestamp) console.log("等待活动开始...");
+  if (Date.now() < config.startTimestamp*1000) console.log("等待活动开始...");
 
-  setInterval(countDelta, config.fetchTime);
   while (true) {
     if (Date.now() < config.startTimestamp*1000) continue;
     if (Date.now() > config.endTimestamp*1000){console.log("活动已结束！");break;}
+    if (Date.now() - lastGetBoardTime > config.fetchTime) await countDelta();
     for (let user of config.users) {
       if (Date.now() - user.lastPaintTime < config.paintTime) {
         continue;
@@ -73,9 +72,9 @@ function getReqPaintPos() {
     if (config.random) {
       reqPaintPos.sort((a, b) => { return Math.random() - 0.5; });
     }
-    console.log(new Date().toLocaleString(), `Load reqPaintPos Succeeded: Size = ${reqPaintPos.length}.`);
+    console.log(Date().toLocaleString(), `Load reqPaintPos Succeeded: Size = ${reqPaintPos.length}.`);
   } catch (err) {
-    console.warn(new Date().toLocaleString(), 'Load reqPaintPos Failed:', err);
+    console.warn(Date().toLocaleString(), 'Load reqPaintPos Failed:', err);
   }
 }
 
@@ -104,20 +103,21 @@ async function paintBoard(user, data) {
       },
       body: querystring.stringify({x: data.x, y: data.y, color: data.color, uid: user.uid, token: user.token,})
     });
-    if (res.status == 200 && res.data.status == 200) {
-      console.log(new Date().toLocaleString(), 'Paint PaintBoard Succeeded:', user.token, data);
+    if (res.status == 200) {
+      console.log(Date().toLocaleString(), 'Paint PaintBoard Succeeded:', user.token, data);
       paints++;
     } else {
       throw new Error(JSON.stringify(await res.json()));
     }
   } catch (err) {
-    console.warn(new Date().toLocaleString(), 'Paint PaintBoard Failed:', user.token, err.message);
+    console.warn(Date().toLocaleString(), 'Paint PaintBoard Failed:', user.token, err.message);
     return false;
   }
   return true;
 }
 
 async function countDelta() {
+  lastGetBoardTime = Date.now();
   let correct = 0;
   let wrong = 0;
   try {
@@ -126,10 +126,10 @@ async function countDelta() {
     if (!board[board.length - 1]) {
       board.pop();
     }
-    console.log(new Date().toLocaleString(), 'Get PaintBoard While Counting Delta Succeeded.');
+    console.log(Date().toLocaleString(), 'Get PaintBoard While Counting Delta Succeeded.');
     getReqPaintPos();
   } catch (err) {
-    console.warn(new Date().toLocaleString(), 'Get PaintBoard While Counting Delta Failed:', err);
+    console.warn(Date().toLocaleString(), 'Get PaintBoard While Counting Delta Failed:', err);
   }
   for (let p of pic) {
     for (let pix of p.map) {
@@ -140,10 +140,11 @@ async function countDelta() {
     }
   }
   delta = -correct + lcorrect - paints;
+  paints=0;
   speed = correct - lcorrect;
   lcorrect = correct;
-  eTime = wrong / speed * config.fetchTime;
-  if(eTime < 0) eTime = Never;
+  eTime = wrong / speed * config.fetchTime/1000;
+  if(eTime < 0) eTime = "Never";
   else eTime = `${eTime}s`;
-  console.log(new Date.toLocaleString(), `Delta: ${delta}, Speed: ${speed}/${config.fetchTime/1000}s, ETime: `+eTime);
+  console.log(Date.toLocaleString(), `Delta: ${delta}, Speed: ${speed}/${config.fetchTime/1000}s, ETime: `+eTime);
 }
