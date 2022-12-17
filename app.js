@@ -34,9 +34,7 @@ async function main() {
       if (reqPaintPos.length) {
         user.lastPaintTime = Date.now();
         let data = reqPaintPos.shift();
-        if (!await paintBoard(user, data)) {
-          reqPaintPos.push(data);
-        }
+        paintBoard(user, data)
         break;
       }
     }
@@ -111,6 +109,7 @@ async function paintBoard(user, data) {
     }
   } catch (err) {
     console.warn(Date().toLocaleString(), 'Paint PaintBoard Failed:', user.token, err.message);
+    reqPaintPos.push(data);
     return false;
   }
   return true;
